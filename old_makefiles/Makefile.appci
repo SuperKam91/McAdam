@@ -1,0 +1,40 @@
+FC = mpif90 -mcmodel=medium
+CC = mpicc -mcmodel=medium
+CXX = mpiCC -mcmodel=medium
+LAPACKLIB = -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread
+FFTWLIB = -lfftw3
+EXTRAFLAGS = -shared-intel 
+
+export FC CC CXX LAPACKLIB EXTRAFLAGS FFTWLIB
+ 
+.PHONY: multinest PolyChord McAdam genCMBCM getdist
+ 
+BINDIR = bin
+ 
+all: multinest PolyChord genCMBCM getdist
+ 
+multinest: 
+	gmake -C multinest all  
+      
+PolyChord: 
+	gmake -C PolyChord all  
+
+McAdam: 
+	-rm McAdam 
+	gmake -C src clean 
+	gmake -C src McAdam
+ 
+genCMBCM: 
+	gmake -C src/genCovMat
+ 
+getdist: 
+	gmake -C src/getdist
+ 
+clean: 
+	gmake -C src clean 
+	gmake -C multinest clean
+	gmake -C PolyChord veryclean
+	gmake -C src/genCovMat clean 
+	gmake -C src/getdist clean 
+	-rm McAdam 
+ 

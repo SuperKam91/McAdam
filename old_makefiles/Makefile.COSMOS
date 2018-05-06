@@ -1,0 +1,40 @@
+FC = ifort -lmpi
+CC = icc -lmpi
+CXX = icpc -lmpi
+LAPACKLIB = -mkl=parallel -lmkl_lapack
+FFTWLIB = -lfftw3
+EXTRAFLAGS = 
+
+export FC CC CXX LAPACKLIB EXTRAFLAGS FFTWLIB
+ 
+.PHONY: multinest PolyChord McAdam genCMBCM getdist
+ 
+BINDIR = bin
+ 
+all: multinest PolyChord genCMBCM getdist
+ 
+multinest: 
+	gmake -C multinest all  
+      
+PolyChord: 
+	gmake -C PolyChord all  
+
+McAdam: 
+	-rm McAdam 
+	gmake -C src clean 
+	gmake -C src McAdam
+ 
+genCMBCM: 
+	gmake -C src/genCovMat
+ 
+getdist: 
+	gmake -C src/getdist
+ 
+clean: 
+	gmake -C src clean 
+	gmake -C multinest clean
+	gmake -C PolyChord veryclean
+	gmake -C src/genCovMat clean 
+	gmake -C src/getdist clean 
+	-rm McAdam 
+ 

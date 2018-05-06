@@ -1,0 +1,57 @@
+
+FC = THIS_FC
+CC = THIS_CC
+CXX = THIS_CXX
+AR = THIS_AR
+LAPACKLIB = THIS_LAPACKLIB
+FFTWLIB = THIS_FFTWLIB
+EXTRAFLAGS = THIS_EXTRAFLAGS
+DEBUGFLAGS = THIS_DEBUGFLAGS
+FDEBUGFLAGS = THIS_FDEBUGFLAGS
+CDEBUGFLAGS = THIS_CDEBUGFLAGS
+
+EXTRAFLAGS += -DMPI
+
+IPO = THIS_IPO
+FC += $(IPO)
+CC += $(IPO)
+CXX += $(IPO)
+
+export FC CC CXX LAPACKLIB EXTRAFLAGS FFTWLIB FDEBUGFLAGS CDEBUGFLAGS AR
+ 
+.PHONY: multinest PolyChord McAdam genCMBCM getdist
+ 
+BINDIR = bin
+ 
+all: multinest PolyChord genCMBCM getdist
+ 
+multinest: 
+	gmake -C multinest all  
+      
+PolyChord: 
+	gmake -C PolyChord all  
+
+McAdam: 
+	-rm McAdam
+	gmake -C src clean 
+	gmake -C src McAdam
+ 
+test_likelihood: 
+	-rm test_likelihood
+	gmake -C src clean 
+	gmake -C src test_likelihood
+ 
+genCMBCM: 
+	gmake -C src/genCovMat
+ 
+getdist: 
+	gmake -C src/getdist
+ 
+clean: 
+	gmake -C src clean 
+	gmake -C multinest clean
+	gmake -C PolyChord clean
+	gmake -C src/genCovMat clean 
+	gmake -C src/getdist clean 
+	-rm McAdam test_likelihood
+ 

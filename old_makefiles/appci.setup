@@ -1,0 +1,6 @@
+'cp' McCompile.appci McCompile
+'cp' Makefile.appci Makefile
+
+module load intel/fce/15.0.0
+module load mpich/intel/2.4.1p1
+module load intel/mkle/15.0.0

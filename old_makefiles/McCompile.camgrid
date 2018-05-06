@@ -1,0 +1,95 @@
+#!/bin/tcsh
+
+source /opt/intel/fce/setup
+source /opt/intel/cce/setup
+setenv PATH ${PATH}:/usr/local/mpich/1.2.26/intel/x86_64/bin
+
+alias mv 'mv -f'
+alias rm 'rm -f'
+alias cp 'cp -f'
+
+set LIBDIR="lib"
+set BINDIR="bin"
+
+setenv FC "mpif90"
+setenv CC "mpicc"
+setenv CXX "mpixx"
+setenv LAPACKLIB "-L/usr/lib64 -llapack -lblas -lgfortran"
+
+set num=${#argv}
+
+if ($num == 0) then
+  echo 'McCompile: No include file supplied.'
+  echo '  Usage: McCompile file1.inc file2.inc ...'
+  goto finish
+endif  
+
+set testfile=$LIBDIR/libnest3.a
+if ( ! -e $testfile ) then
+  gmake -C multinest
+else
+  echo "libnest3.a exists, no need to remake."
+endif  
+
+set testfile2=$LIBDIR/libchord.a
+if ( ! -e $testfile2 ) then
+  gmake -C PolyChord
+else
+  echo "libchord.a exists, no need to remake."
+endif  
+
+echo "  "
+
+touch src/params.f90; mv src/params.f90 params_old.f90
+
+foreach incfile ( $argv[*] )
+
+  set exefile=$incfile:r.exe
+  touch $exefile; rm $exefile
+  
+  set simulate=`grep simulate/ $incfile | cut -d'.' -f 2`  
+
+  if ( $simulate == true ) then
+    
+    echo "simulation has been disabled."
+    goto finish
+
+  else if ( $simulate == false ) then
+
+    cp src/params_MakeData_dummy.f90 src/params_MakeData.f90
+    cp src/MakeData_dummy.f90 src/MakeData.f90
+    echo "Inference mode, using MakeData_dummy.f90"
+
+  else
+    echo "Error: simulate has value "$simulate
+  endif 
+      
+  cp $incfile src/params.f90
+  
+  echo " "
+  gmake McAdam
+  if ( -e $BINDIR/McAdam ) then
+    mv $BINDIR/McAdam $BINDIR/$exefile
+  else 
+    echo "Compilation failed: $BINDIR/$exefile not created."
+  endif
+    
+  echo " "
+    
+end
+
+set i=1
+
+foreach incfile ( $argv[*] )
+  set exefile=$incfile:r.exe
+  if ( -e $BINDIR/$exefile ) then 
+    echo "Compiled "$BINDIR/$exefile" using "$incfile
+  else
+    echo "Failed to compile "$BINDIR/$exefile" using "$incfile
+  endif
+end
+
+mv params_old.f90 src/params.f90
+echo " "
+ 
+finish:

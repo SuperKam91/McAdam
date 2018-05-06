@@ -1,0 +1,31 @@
+  p001      x_0 / \mathrm{arcsec}
+  p002      y_0 / \mathrm{arcsec}
+  p003      M_{T,200} / M_{\odot}
+  p004      f_{\mathrm{gas},200}
+  p005      S_{1} / \mathrm{Jy}
+  p006      \alpha_{1}
+  p007*     D / \mathrm{Mpc}
+  p008*     c_{200}
+  p009*     GasPars(1,1)
+  p010*     r_{200} / \mathrm{Mpc}
+  p011*     M_{g,200} / M_{\odot}
+  p012*     T_{g,200}
+  p013*     M_{T,500} / M_{\odot}
+  p014*     f_{g,500}
+  p015*     r_{500} / \mathrm{Mpc}
+  p016*     M_{g,500} / M_{\odot}
+  p017*     T_{g,500}
+  p018*     y_{0}
+  p019*     Y_{\mathrm{sph},200}
+  p020*     Y_{\mathrm{sph},500}
+  p021*     \theta_{200} / \mathrm{arcmin}
+  p022*     Y_{\mathrm{sph},200} / \mathrm{arcmin}^2
+  p023*     \theta_{500} / \mathrm{arcmin}
+  p024*     Y_{\mathrm{sph},500} / \mathrm{arcmin}^2
+  p025*     P_{ei}
+  p026*     \rho_{s}
+  p027*     r_{s} / \mathrm{Mpc}
+  p028*     r_{p} / \mathrm{Mpc}
+  p029*     \theta_{p} / \mathrm{arcmin}
+  p030*     \rho_{\mathrm{crit},z}
+  p031*     Y_{\mathrm{cyl}} / \mathrm{arcmin}^2

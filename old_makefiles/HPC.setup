@@ -1,0 +1,2 @@
+'cp' McCompile.HPC McCompile
+'cp' Makefile.HPC Makefile

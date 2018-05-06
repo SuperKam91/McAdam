@@ -1,0 +1,48 @@
+
+FC = mpif90 -ipo -xHost -O3 
+CC = mpicc -ipo -xHost -O3
+CXX = mpiicpc -ipo -xHost -O3
+#FC = mpif90 -g -xHost -O3 -align -ansi-alias -mcmodel=medium -traceback
+#CC = mpicc -g -xHost -O3 -align -ansi-alias -mcmodel=medium -traceback
+#CXX = mpicpc -g -xHost -O3 -align -ansi-alias -mcmodel=medium -traceback -restrict
+LAPACKLIB = -mkl=sequential 
+##FC = ifort -lmpi
+##CC = icc -lmpi
+##CXX = icpc -lmpi
+##LAPACKLIB = -mkl=sequential
+FFTWLIB = -lfftw3
+EXTRAFLAGS = -openmp
+
+export FC CC CXX LAPACKLIB EXTRAFLAGS FFTWLIB
+ 
+.PHONY: multinest PolyChord McAdam genCMBCM getdist
+ 
+BINDIR = bin
+ 
+all: multinest PolyChord genCMBCM getdist
+ 
+multinest: 
+	gmake -C multinest all  
+      
+PolyChord: 
+	gmake -C PolyChord all  
+
+McAdam: 
+	-rm McAdam 
+	gmake -C src clean 
+	gmake -C src McAdam
+ 
+genCMBCM: 
+	gmake -C src/genCovMat
+ 
+getdist: 
+	gmake -C src/getdist
+ 
+clean: 
+	gmake -C src clean 
+	gmake -C multinest clean
+	gmake -C PolyChord clean
+	gmake -C src/genCovMat clean 
+	gmake -C src/getdist clean 
+	-rm McAdam 
+ 
